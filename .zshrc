@@ -124,5 +124,6 @@ export LD_LIBRARY_PATH=$OPENSSL_DIR/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=$OPENSSL_DIR/lib:$LIBRARY_PATH
 export PATH="/Applications/Xcode.app/Contents/Developer/usr/bin:$PATH"
 export PATH="/Users/alebridi/.platformio/penv/bin:$PATH"
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
