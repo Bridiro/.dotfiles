@@ -127,3 +127,5 @@ export PATH="/Users/alebridi/.platformio/penv/bin:$PATH"
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
+
+eval $(opam env)

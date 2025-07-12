@@ -9,7 +9,7 @@ require('mason').setup({
 })
 
 require('mason-lspconfig').setup({
-    ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'clangd' },
+    ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'clangd', 'ocamllsp' },
 })
 
 -- Set different settings for different languages' LSP
@@ -50,7 +50,7 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
     vim.keymap.set("n", "<space>f", function()
-        vim.lsp.buf.format({ async = true })
+        require("conform").format({ async = true, lsp_fallback = true })
     end, bufopts)
 end
 
@@ -71,5 +71,9 @@ lspconfig.clangd.setup({
 })
 
 lspconfig.lua_ls.setup({
+    on_attach = on_attach,
+})
+
+lspconfig.ocamllsp.setup({
     on_attach = on_attach,
 })

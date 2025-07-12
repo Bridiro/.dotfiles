@@ -65,6 +65,7 @@ require("lazy").setup({
 			require("config.nvim-cmp")
 		end,
 	},
+    -- Parenthesis autopairing
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
@@ -75,6 +76,7 @@ require("lazy").setup({
 		"L3MON4D3/LuaSnip",
 		version = "v2.*",
 	},
+    -- My favourite colorscheme
     {
         "folke/tokyonight.nvim",
         lazy = false,
@@ -93,6 +95,28 @@ require("lazy").setup({
             save_path = "~/Pictures",
             has_breadcrumbs = true,
             bg_theme = "bamboo",
+        },
+    },
+    -- Formatter for OCaml
+    {
+        "stevearc/conform.nvim",
+        opts = {
+            formatters_by_ft = {
+                ocaml = { "ocamlformat" },
+            },
+
+            formatters = {
+                ocamlformat = {
+                    prepend_args = {
+                        "--if-then-else",
+                        "vertical",
+                        "--break-cases",
+                        "fit-or-vertical",
+                        "--type-decl",
+                        "sparse",
+                    },
+                },
+            },
         },
     }
 })
