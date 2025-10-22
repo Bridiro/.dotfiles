@@ -126,6 +126,11 @@ export PATH="/Applications/Xcode.app/Contents/Developer/usr/bin:$PATH"
 export PATH="/Users/alebridi/.platformio/penv/bin:$PATH"
 export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
 
+if [ -d "/opt/homebrew/opt/ruby/bin" ]; then
+  export PATH=/opt/homebrew/opt/ruby/bin:$PATH
+  export PATH=`gem environment gemdir`/bin:$PATH
+fi
+
 export STM32CubeMX_PATH=/Applications/STMicroelectronics/STM32CubeMX.app/Contents/Resources
 
 eval $(opam env)
