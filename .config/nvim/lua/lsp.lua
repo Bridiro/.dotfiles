@@ -54,26 +54,51 @@ local on_attach = function(client, bufnr)
     end, bufopts)
 end
 
--- Configure each language
--- How to add LSP for a specific language?
--- 1. use `:Mason` to install corresponding LSP
--- 2. add configuration below
-lspconfig.pylsp.setup({
-    on_attach = on_attach,
-})
+-- ==========================================================
+-- Define per-language configurations using vim.lsp.config
+-- ==========================================================
+local configs = vim.lsp.config
 
-lspconfig.rust_analyzer.setup({
+configs.pylsp = {
+    name = "pylsp",
+    cmd = { "pylsp" },
     on_attach = on_attach,
-})
+}
 
-lspconfig.clangd.setup({
+configs.rust_analyzer = {
+    name = "rust_analyzer",
+    cmd = { "rust-analyzer" },
     on_attach = on_attach,
-})
+}
 
-lspconfig.lua_ls.setup({
+configs.clangd = {
+    name = "clangd",
+    cmd = { "clangd" },
     on_attach = on_attach,
-})
+}
 
-lspconfig.ocamllsp.setup({
+configs.lua_ls = {
+    name = "lua_ls",
+    cmd = { "lua-language-server" },
     on_attach = on_attach,
-})
+    settings = {
+        Lua = {
+            diagnostics = { globals = { "vim" } },
+        },
+    },
+}
+
+configs.ocamllsp = {
+    name = "ocamllsp",
+    cmd = { "ocamllsp" },
+    on_attach = on_attach,
+}
+
+-- ==========================================================
+-- Start all installed LSPs (modern mason-lspconfig)
+-- ==========================================================
+local mason_lspconfig = require("mason-lspconfig")
+for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
+    local cfg = configs[server_name] or { name = server_name, cmd = { server_name } }
+    vim.lsp.start(cfg)
+end
