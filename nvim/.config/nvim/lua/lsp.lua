@@ -12,13 +12,6 @@ require('mason-lspconfig').setup({
     ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'clangd', 'ocamllsp' },
 })
 
--- Set different settings for different languages' LSP
--- LSP list: https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
--- How to use setup({}): https://github.com/neovim/nvim-lspconfig/wiki/Understanding-setup-%7B%7D
---     - the settings table is sent to the LSP
---     - on_attach: a lua callback function to run after LSP attaches to a given buffer
-local lspconfig = require('lspconfig')
-
 -- Customized on_attach function
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap = true, silent = true }
@@ -33,73 +26,90 @@ end, { noremap = true, silent = true, desc = "Format with conform" })
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+local on_attach = function(_, bufnr)
+    vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wl', function()
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+    vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, bufopts)
+    vim.keymap.set("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
+    vim.keymap.set("n", "<space>wl", function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, bufopts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-    vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+    vim.keymap.set("n", "<space>D", vim.lsp.buf.type_definition, bufopts)
+    vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, bufopts)
+    vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, bufopts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
 end
 
--- ==========================================================
--- Define per-language configurations using vim.lsp.config
--- ==========================================================
-local configs = vim.lsp.config
+------------------------------------------------------------
+-- LSP server configurations (0.11+ API)
+-- We MERGE with nvim-lspconfig defaults
+------------------------------------------------------------
 
-configs.pylsp = {
-    name = "pylsp",
-    cmd = { "pylsp" },
-    on_attach = on_attach,
-}
+-- Rust
+vim.lsp.config.rust_analyzer = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.config.rust_analyzer or {},
+    {
+        on_attach = on_attach,
+    }
+)
 
-configs.rust_analyzer = {
-    name = "rust_analyzer",
-    cmd = { "rust-analyzer" },
-    on_attach = on_attach,
-}
+-- Python
+vim.lsp.config.pylsp = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.config.pylsp or {},
+    {
+        on_attach = on_attach,
+    }
+)
 
-configs.clangd = {
-    name = "clangd",
-    cmd = { "clangd" },
-    on_attach = on_attach,
-}
+-- C / C++
+vim.lsp.config.clangd = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.config.clangd or {},
+    {
+        on_attach = on_attach,
+    }
+)
 
-configs.lua_ls = {
-    name = "lua_ls",
-    cmd = { "lua-language-server" },
-    on_attach = on_attach,
-    settings = {
-        Lua = {
-            diagnostics = { globals = { "vim" } },
+-- Lua
+vim.lsp.config.lua_ls = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.config.lua_ls or {},
+    {
+        on_attach = on_attach,
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { "vim" },
+                },
+            },
         },
-    },
-}
+    }
+)
 
-configs.ocamllsp = {
-    name = "ocamllsp",
-    cmd = { "ocamllsp" },
-    on_attach = on_attach,
-}
+-- OCaml
+vim.lsp.config.ocamllsp = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.config.ocamllsp or {},
+    {
+        on_attach = on_attach,
+    }
+)
 
--- ==========================================================
--- Start all installed LSPs (modern mason-lspconfig)
--- ==========================================================
-local mason_lspconfig = require("mason-lspconfig")
-for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
-    local cfg = configs[server_name] or { name = server_name, cmd = { server_name } }
-    vim.lsp.start(cfg)
-end
+------------------------------------------------------------
+-- Enable servers (this is REQUIRED)
+------------------------------------------------------------
+vim.lsp.enable({
+    "rust_analyzer",
+    "pylsp",
+    "clangd",
+    "lua_ls",
+    "ocamllsp",
+})
