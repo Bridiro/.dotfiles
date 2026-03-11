@@ -23,6 +23,7 @@ export OPENSSL_DIR=$(brew --prefix openssl@3)
 export PKG_CONFIG_PATH=$OPENSSL_DIR/lib/pkgconfig:$PKG_CONFIG_PATH
 export LD_LIBRARY_PATH=$OPENSSL_DIR/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=$OPENSSL_DIR/lib:$LIBRARY_PATH
+export PATH="/Users/alebridi/.platformio/penv/bin:$PATH"
 export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
 export PATH="$PATH:/Applications/Xcode.app/Contents/Developer/usr/bin"
 export PATH="$PATH:/Applications/ArmGNUToolchain/13.3.rel1/arm-none-eabi/bin"
