@@ -9,7 +9,7 @@ require('mason').setup({
 })
 
 require('mason-lspconfig').setup({
-    ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'clangd', 'ocamllsp' },
+    ensure_installed = { 'pylsp', 'lua_ls', 'rust_analyzer', 'clangd', 'ocamllsp', 'vala_ls' },
 })
 
 -- Customized on_attach function
@@ -98,6 +98,15 @@ vim.lsp.config.lua_ls = vim.tbl_deep_extend(
 vim.lsp.config.ocamllsp = vim.tbl_deep_extend(
     "force",
     vim.lsp.config.ocamllsp or {},
+    {
+        on_attach = on_attach,
+    }
+)
+
+-- Vala
+vim.lsp.config.vala_ls = vim.tbl_deep_extend(
+    "force",
+    vim.lsp.config.vala_ls or {},
     {
         on_attach = on_attach,
     }
