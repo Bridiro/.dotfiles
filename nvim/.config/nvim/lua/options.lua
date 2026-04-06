@@ -17,6 +17,8 @@ vim.opt.splitbelow = true     -- open new vertical split bottom
 vim.opt.splitright = true     -- open new horizontal splits right
 vim.opt.termguicolors = true  -- enabl 24-bit RGB color in the TUI
 vim.opt.showmode = false      -- we are experienced, wo don't need the "-- INSERT --" mode hint
+vim.opt.scrolloff = 8         -- keep 8 lines above and below the cursor when scrolling
+vim.opt.sidescrolloff = 8     -- keep 8 lines to the left and right of the cursor when scrolling
 
 -- Searching
 vim.opt.incsearch = true  -- search as characters are entered
