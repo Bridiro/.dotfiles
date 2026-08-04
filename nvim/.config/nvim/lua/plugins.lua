@@ -109,7 +109,7 @@ require("lazy").setup({
                 typescriptreact = { "prettier" },
                 css = { "prettier" },
                 html = { "prettier" },
-                json = { "prettier" },
+                json = { "clang-format" },
                 yaml = { "prettier" },
                 vala = { "uncrustify" },
             },
@@ -136,5 +136,9 @@ require("lazy").setup({
             -- VimTeX configuration goes here, e.g.
             vim.g.vimtex_view_method = "skim"
         end
+    },
+    {
+        -- Abbreviations and substitutions for Vim
+        "tpope/vim-abolish",
     }
 })
