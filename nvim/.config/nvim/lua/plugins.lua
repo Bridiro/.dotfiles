@@ -45,18 +45,47 @@ require("lazy").setup({
     -- Tree-sitter
     {
         "nvim-treesitter/nvim-treesitter",
-        event = "BufReadPost",
+        branch = "main",
+        event = { "BufReadPost", "BufNewFile" },
         build = ":TSUpdate",
-        config = function()
-            local configs = require("nvim-treesitter.configs")
 
-            configs.setup({
-                ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "rust", "css", "javascript", "html", "wgsl", "vala" },
-                sync_install = false,
-                highlight = { enable = true },
-                indent = { enable = true },
+        config = function()
+            require("nvim-treesitter").install({
+                "c",
+                "lua",
+                "vim",
+                "vimdoc",
+                "query",
+                "rust",
+                "css",
+                "javascript",
+                "html",
+                "wgsl",
+                "vala",
+                "markdown",
+                "markdown_inline",
             })
-        end
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = {
+                    "c",
+                    "lua",
+                    "vim",
+                    "vimdoc",
+                    "query",
+                    "rust",
+                    "css",
+                    "javascript",
+                    "html",
+                    "wgsl",
+                    "vala",
+                    "markdown",
+                },
+                callback = function()
+                    vim.treesitter.start()
+                end,
+            })
+        end,
     },
     -- Auto-completion engine
     {
